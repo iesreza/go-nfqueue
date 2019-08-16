@@ -131,6 +131,9 @@ func go_nfq_callback(id uint32, hwproto uint16, hook uint8, mark *uint32,
 	version, protocol, tos, ttl uint8, saddr, daddr unsafe.Pointer,
 	sport, dport, checksum uint16, payload, nfqptr unsafe.Pointer) (v uint32) {
 
+	payload_len := C._c_get_payload(nfqptr, &payload)
+	data := C.GoBytes(payload, C.int(payload_len))
+
 	var (
 		nfq   = (*nfQueue)(nfqptr)
 		ipver = IPVersion(version)
@@ -144,6 +147,8 @@ func go_nfq_callback(id uint32, hwproto uint16, hook uint8, mark *uint32,
 		HWProtocol: hwproto,
 		Hook:       hook,
 		Mark:       *mark,
+		Payload:    data,
+
 		IPHeader: &IPHeader{
 			Version:  ipver,
 			Protocol: IPProtocol(protocol),

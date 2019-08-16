@@ -108,6 +108,8 @@ type Packet struct {
 	HWProtocol uint16
 	Hook       uint8
 	Mark       uint32
+	Length     uint32
+	Payload    []byte
 	*IPHeader
 	*TCPUDPHeader
 
