@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"runtime"
 
-	"github.com/OneOfOne/go-nfqueue"
+	"github.com/iesreza/go-nfqueue"
 )
 
 func print_packets(qid uint16, pkt *nfqueue.Packet) {
@@ -30,7 +30,7 @@ LOOP:
 	for {
 		select {
 		case pkt := <-packets:
-			fmt.Println(pkt)
+			fmt.Println(pkt.Payload)
 			pkt.Accept()
 		case <-sig:
 			break LOOP
