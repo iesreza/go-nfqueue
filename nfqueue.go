@@ -129,9 +129,8 @@ func (this *nfQueue) Valid() bool {
 //export go_nfq_callback
 func go_nfq_callback(id uint32, hwproto uint16, hook uint8, mark *uint32,
 	version, protocol, tos, ttl uint8, saddr, daddr unsafe.Pointer,
-	sport, dport, checksum uint16, payload, nfqptr unsafe.Pointer) (v uint32) {
+	sport, dport, checksum uint16, payload unsafe.Pointer, payload_len int, nfqptr unsafe.Pointer) (v uint32) {
 
-	payload_len := C._c_get_payload(nfqptr, &payload)
 	data := C.GoBytes(payload, C.int(payload_len))
 
 	var (

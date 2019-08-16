@@ -17,9 +17,9 @@ int nfqueue_cb_new(struct nfq_q_handle *qh, struct nfgenmsg *nfmsg, struct nfq_d
 	uint16_t sport = 0,  dport = 0, checksum = 0;
 	uint32_t mark = nfq_get_nfmark(nfa);
 
-	int len = nfq_get_payload(nfa, &payload);
+	int payload_len = nfq_get_payload(nfa, &payload);
 
-	if(len <= 0 || len <=  sizeof(struct iphdr)) {
+	if(payload_len <= 0 || payload_len <=  sizeof(struct iphdr)) {
 		return 0;
 	}
 
@@ -47,7 +47,7 @@ int nfqueue_cb_new(struct nfq_q_handle *qh, struct nfgenmsg *nfmsg, struct nfq_d
 	}
 	//pass everything we can and let Go handle it, I'm not a big fan of C
 	uint32_t verdict = go_nfq_callback(id, ntohs(ph->hw_protocol), ph->hook, &mark, ip->version, ip->protocol, 
-								  ip->tos, ip->ttl, saddr, daddr, sport, dport, checksum, payload, data);
+								  ip->tos, ip->ttl, saddr, daddr, sport, dport, checksum, payload,payload_len, data);
 	return nfq_set_verdict2(qh, id, verdict, mark, 0, NULL);
 }
 
